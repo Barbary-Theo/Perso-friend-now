@@ -1,6 +1,7 @@
 import React from 'react'
 import '../style/main.css'
 import FriendService from "../service/FriendService";
+import ArcadeButton from "../component/ArcadeButton";
 
 const Main = () => {
 
@@ -11,7 +12,7 @@ const Main = () => {
 
     return (
         <div className="test">
-            <div>Among us</div>
+            <ArcadeButton text="Your are so sus" />
         </div>
     )
 }
