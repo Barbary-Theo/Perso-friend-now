@@ -1,20 +1,24 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import '../style/main.css'
 import FriendService from "../service/FriendService";
-import ArcadeButton from "../component/ArcadeButton";
 import Menu from "../component/Menu";
+import CardFriend from "../component/CardFriend";
 
 const Main = () => {
 
-    FriendService.getAllFriends()
-        .then((response) => {return response.json()})
-        .then((friends) => console.log(friends))
-        .catch((err) => console.error(err));
+    const [friends, setFriends] = useState([]);
+
+    useEffect(() => {
+        FriendService.getAllFriends()
+            .then((response) => {return response.json()})
+            .then((friends) => setFriends(friends))
+            .catch((err) => console.error(err));
+    });
 
     return (
-        <div className="test">
+        <div className="container">
             <Menu />
-            <ArcadeButton text="Your are so sus" size="lg"/>
+            { friends.map((friend) => <CardFriend key={friend.firstname} friend={friend.firstname}></CardFriend>) }
         </div>
     )
 }
