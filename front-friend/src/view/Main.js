@@ -2,6 +2,7 @@ import React from 'react'
 import '../style/main.css'
 import FriendService from "../service/FriendService";
 import ArcadeButton from "../component/ArcadeButton";
+import Menu from "../component/Menu";
 
 const Main = () => {
 
@@ -12,7 +13,8 @@ const Main = () => {
 
     return (
         <div className="test">
-            <ArcadeButton text="Your are so sus" />
+            <Menu />
+            <ArcadeButton text="Your are so sus" size="lg"/>
         </div>
     )
 }
