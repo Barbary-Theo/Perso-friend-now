@@ -3,7 +3,7 @@ import '../style/components.css';
 import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
 
-const ArcadeButton = ({icon, text, size, color}) => {
+const ArcadeButton = ({icon, text, size, color, event}) => {
 
     const fontSize = size === "xs" ? "5px"
                             : size === "md" ? "10px"
@@ -15,7 +15,7 @@ const ArcadeButton = ({icon, text, size, color}) => {
                             : "7px 15px";
 
     return (
-        <a className="btn-arcade flex-center" style={{"backgroundColor": color, "padding": padding, "fontSize": fontSize}}>
+        <a onClick={event} className="btn-arcade flex-center" style={{"backgroundColor": color, "padding": padding, "fontSize": fontSize}}>
             <div className="flex-center">{icon}</div>
             {text}
         </a>
