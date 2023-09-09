@@ -1,17 +1,22 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import '../style/main.css'
 import FriendService from "../service/FriendService";
+import CardFriend from "../component/CardFriend";
 
 const Main = () => {
 
-    FriendService.getAllFriends()
-        .then((response) => {return response.json()})
-        .then((friends) => console.log(friends))
-        .catch((err) => console.error(err));
+    const [friends, setFriends] = useState([]);
+
+    useEffect(() => {
+        FriendService.getAllFriends()
+            .then((response) => {return response.json()})
+            .then((friends) => setFriends(friends))
+            .catch((err) => console.error(err));
+    });
 
     return (
-        <div className="test">
-            <div>Among us</div>
+        <div className="container content">
+            { friends.map((friend) => <CardFriend key={friend.firstname} friend={friend.firstname}></CardFriend>) }
         </div>
     )
 }

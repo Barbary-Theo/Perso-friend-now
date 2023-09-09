@@ -1,7 +1,34 @@
-.App {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+
+.spacer-2 {
+  margin-top: 2vh !important;
+}
+
+/* styles.css */
+body, html {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  font-family: "Nunito Sans", sans-serif;
+  background-color: #F7F3F2;
+  cursor: grab;
+}
+
+.draggable-container {
+  position: relative;
   width: 100vw;
+  height: 100vh;
+}
+
+.draggable-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-size: cover; /* Adjust as needed */
+  background-position: center; /* Adjust as needed */
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  /* Other styles for your content */
 }
