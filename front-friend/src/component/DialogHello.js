@@ -41,7 +41,7 @@ const DialogHello = () => {
                     <input value={userFocused} onChange={e => setUserFocused(e.target.value)} className="dialog-input" id="focused-user" placeholder="Utilisateur ciblé (nom, prénom, pseudo)"/>
                 </div>
                 <div className="dialog-btn-container">
-                    <ArcadeButton event={test} text="Attérir 🚀" size="lg"/>
+                    <ArcadeButton event={focusUser} text="Attérir 🚀" size="lg"/>
                 </div>
             </Dialog>
         </div>
