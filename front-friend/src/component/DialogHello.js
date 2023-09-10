@@ -14,6 +14,7 @@ const DialogHello = () => {
     const [open, setOpen] = React.useState(true);
     const [userFocused, setUserFocused] = useState('');
     const [friend, setFriend] = useState(null);
+    const [loading, setLoading] = useState(false);
 
 
     const handleClickOpen = () => {
@@ -25,16 +26,21 @@ const DialogHello = () => {
     };
 
     const handleClickSearch = () => {
-        FriendService.getFriendByInfo(userFocused)
-            .then((response) => {
-                if(response.status === 200) return response.json();
-                throw response.status;
-            })
-            .then((friendFocused) => {
-                setFriend(friendFocused)
-                console.log(friendFocused)
-            })
-            .catch((err) => console.error(err));
+        setLoading(true)
+        setTimeout(() => {
+            FriendService.getFriendByInfo(userFocused)
+                .then((response) => {
+                    if(response.status === 200) return response.json();
+                    throw response.status;
+                })
+                .then((friendFocused) => {
+                    setFriend(friendFocused)
+                    console.log(friendFocused)
+                    setOpen(false);
+                })
+                .catch((err) => console.error(err))
+                .finally(() => setLoading(false));
+        }, 1000)
     }
 
     return (
@@ -52,10 +58,7 @@ const DialogHello = () => {
                     <input value={userFocused} onChange={e => setUserFocused(e.target.value)} className="dialog-input" id="focused-user" placeholder="Utilisateur ciblé (nom, prénom, pseudo)"/>
                 </div>
                 <div className="dialog-btn-container">
-                    <ArcadeButton event={handleClickSearch} text="Attérir 🚀" size="lg"/>
-                </div>
-                <div className="dialog-btn-container">
-                    {friend != null ? friend.firstname : ""}
+                    <ArcadeButton loading={loading} event={handleClickSearch} text="Attérir 🚀" size="lg"/>
                 </div>
             </Dialog>
         </div>
