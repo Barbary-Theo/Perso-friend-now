@@ -3,7 +3,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import ArcadeButton from "./ArcadeButton";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import FriendService from "../service/FriendService";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -11,6 +12,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const DialogHello = () => {
     const [open, setOpen] = React.useState(true);
+    const [userFocused, setUserFocused] = useState('');
+    const [friend, setFriend] = useState(null);
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -20,10 +24,17 @@ const DialogHello = () => {
         setOpen(false);
     };
 
-    const [userFocused, setUserFocused] = useState('');
-
-    const focusUser = () => {
-        console.log(userFocused);
+    const handleClickSearch = () => {
+        FriendService.getFriendByInfo(userFocused)
+            .then((response) => {
+                if(response.status === 200) return response.json();
+                throw response.status;
+            })
+            .then((friendFocused) => {
+                setFriend(friendFocused)
+                console.log(friendFocused)
+            })
+            .catch((err) => console.error(err));
     }
 
     return (
@@ -41,7 +52,10 @@ const DialogHello = () => {
                     <input value={userFocused} onChange={e => setUserFocused(e.target.value)} className="dialog-input" id="focused-user" placeholder="Utilisateur ciblé (nom, prénom, pseudo)"/>
                 </div>
                 <div className="dialog-btn-container">
-                    <ArcadeButton event={focusUser} text="Attérir 🚀" size="lg"/>
+                    <ArcadeButton event={handleClickSearch} text="Attérir 🚀" size="lg"/>
+                </div>
+                <div className="dialog-btn-container">
+                    {friend != null ? friend.firstname : ""}
                 </div>
             </Dialog>
         </div>

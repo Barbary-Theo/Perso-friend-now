@@ -92,5 +92,14 @@ public class FriendController {
         ).findFirst().ifPresent(relationTargeted -> relationTargeted.setCoefRelation(coefToUpdate));
     }
 
+    @GetMapping("/list/byValue")
+    public ResponseEntity<FriendDto> getFriendByPseudo(@RequestParam("info") String info) {
+        FriendDto friend = friendService.findOneByInfo(info);
+        if(friend == null) return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return ResponseEntity.ok(friend);
+    } {
+
+    }
+
 
 }

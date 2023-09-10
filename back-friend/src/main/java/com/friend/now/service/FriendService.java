@@ -35,4 +35,9 @@ public class FriendService {
         friendRepository.saveAll(Arrays.asList(friendOne, friendTwo));
     }
 
+    public FriendDto findOneByInfo(String info) {
+        Optional<Friend> friend = friendRepository.findFirstByFirstnameOrLastnameOrPseudo(info);
+        return friend.map(FriendDto::new).orElse(null);
+    }
+
 }

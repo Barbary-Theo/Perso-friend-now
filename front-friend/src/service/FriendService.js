@@ -6,6 +6,10 @@ class FriendService {
         return fetch(Config.API + "/friend/all", {method: 'GET'});
     }
 
+    static getFriendByInfo(info) {
+        return fetch(Config.API + "/friend/list/byValue?info=" + info, {method: 'GET'});
+    }
+
 }
 
 export default FriendService;
