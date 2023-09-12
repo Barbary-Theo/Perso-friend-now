@@ -3,20 +3,12 @@ import '../style/main.css'
 import FriendService from "../service/FriendService";
 import CardFriend from "../component/CardFriend";
 
-const Main = () => {
-
-    const [friends, setFriends] = useState([]);
-
-    useEffect(() => {
-        FriendService.getAllFriends()
-            .then((response) => {return response.json()})
-            .then((friends) => setFriends(friends))
-            .catch((err) => console.error(err));
-    });
+const Main = ({friend}) => {
 
     return (
         <div className="container content">
-            { friends.map((friend) => <CardFriend key={friend.firstname} friend={friend.firstname}></CardFriend>) }
+            {friend != null ? <CardFriend key={friend.firstname} friend={friend.lastname} layer={0} nbRelations={friend.relations.length} index={0} ></CardFriend> : ''}
+            {friend != null ? friend.relations.map((relation, index) => <CardFriend key={relation.relationFirstname} nbRelations={friend.relations.length} index={index} friend={relation.relationLastname} layer={1}></CardFriend>) : '' }
         </div>
     )
 }

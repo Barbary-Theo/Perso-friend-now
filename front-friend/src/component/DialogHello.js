@@ -10,43 +10,21 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DialogHello = () => {
-    const [open, setOpen] = React.useState(true);
+const DialogHello = ({updateAfterSearch, loadingSearch, searchOpen}) => {
     const [userFocused, setUserFocused] = useState('');
-    const [friend, setFriend] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
 
     const handleClickSearch = () => {
-        setLoading(true)
-        setTimeout(() => {
-            FriendService.getFriendByInfo(userFocused)
-                .then((response) => {
-                    if(response.status === 200) return response.json();
-                    throw response.status;
-                })
-                .then((friendFocused) => {
-                    setFriend(friendFocused)
-                    console.log(friendFocused)
-                    setOpen(false);
-                })
-                .catch((err) => console.error(err))
-                .finally(() => setLoading(false));
-        }, 1000)
+        updateAfterSearch(userFocused);
+    }
+
+    const handleClose = () => {
+        searchOpen = false;
     }
 
     return (
         <div>
             <Dialog
-                open={open}
+                open={searchOpen}
                 TransitionComponent={Transition}
                 keepMounted
                 onClose={handleClose}
@@ -58,7 +36,7 @@ const DialogHello = () => {
                     <input value={userFocused} onChange={e => setUserFocused(e.target.value)} className="dialog-input" id="focused-user" placeholder="Utilisateur ciblé (nom, prénom, pseudo)"/>
                 </div>
                 <div className="dialog-btn-container">
-                    <ArcadeButton loading={loading} event={handleClickSearch} text="Attérir 🚀" size="lg"/>
+                    <ArcadeButton loading={loadingSearch} event={handleClickSearch} text="Attérir 🚀" size="lg"/>
                 </div>
             </Dialog>
         </div>

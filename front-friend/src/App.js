@@ -1,84 +1,102 @@
-import React, { Component } from 'react';
+import React, {Component, useState} from 'react';
 import './style/App.css';
 import Main from './view/Main';
 import Menu from "./component/Menu";
 import DialogHello from "./component/DialogHello";
+import FriendService from "./service/FriendService";
 
-class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isDragging: false,
-            startMouseX: 0,
-            startMouseY: 0,
-            startContainerX: 0,
-            startContainerY: 0,
-        };
-        this.containerRef = React.createRef();
-    }
+const App = () => {
 
-    handleMouseDown = (e) => {
-        this.setState({
+    const [state, setState] = useState({
+        isDragging: false,
+        startMouseX: 0,
+        startMouseY: 0,
+        startContainerX: 0,
+        startContainerY: 0,
+    })
+    let containerRef = React.createRef();
+
+    const handleMouseDown = (e) => {
+        setState({
             isDragging: true,
             startMouseX: e.clientX,
             startMouseY: e.clientY,
-            startContainerX: this.getContainerX(),
-            startContainerY: this.getContainerY(),
+            startContainerX: getContainerX(),
+            startContainerY: getContainerY(),
         });
     };
 
-    handleMouseMove = (e) => {
-        if (this.state.isDragging) {
-            const offsetX = e.clientX - this.state.startMouseX;
-            const offsetY = e.clientY - this.state.startMouseY;
-            const newContainerX = this.state.startContainerX + offsetX;
-            const newContainerY = this.state.startContainerY + offsetY;
+    const handleMouseMove = (e) => {
+        if (state.isDragging) {
+            const offsetX = e.clientX - state.startMouseX;
+            const offsetY = e.clientY - state.startMouseY;
+            const newContainerX = state.startContainerX + offsetX;
+            const newContainerY = state.startContainerY + offsetY;
 
-            this.setContainerPosition(newContainerX, newContainerY);
+            setContainerPosition(newContainerX, newContainerY);
         }
     };
 
-    handleMouseUp = () => {
-        this.setState({ isDragging: false });
+    const handleMouseUp = () => {
+        setState({ isDragging: false });
     };
 
-    getContainerX = () => {
-        const style = getComputedStyle(this.containerRef.current);
+    const getContainerX = () => {
+        const style = getComputedStyle(containerRef.current);
         return parseFloat(style.left) || 0;
     };
 
-    getContainerY = () => {
-        const style = getComputedStyle(this.containerRef.current);
+    const getContainerY = () => {
+        const style = getComputedStyle(containerRef.current);
         return parseFloat(style.top) || 0;
     };
 
-    setContainerPosition = (x, y) => {
-        const container = this.containerRef.current;
+    const setContainerPosition = (x, y) => {
+        const container = containerRef.current;
         x =  x - 1;
         y = y - 1;
-
         container.style.left = `${x}px`;
         container.style.top = `${y}px`;
     };
 
-    render() {
-        return (
-            <div
-                onMouseDown={this.handleMouseDown}
-                onMouseMove={this.handleMouseMove}
-                onMouseUp={this.handleMouseUp}>
-                <div
-                    className="draggable-container"
-                    ref={this.containerRef}>
-                    <div className="content">
-                        <Main />
-                    </div>
-                </div>
-                <DialogHello />
-                <Menu />
-            </div>
-        );
+    const [loadingSearch, setLoadingSearch] = useState(false);
+    const [friend, setFriend] = useState(null);
+    const [searchOpen, setSearchOpen] = React.useState(true);
+
+    const updateAfterSearch = (userFocused) => {
+        setLoadingSearch(true)
+        setTimeout(() => {
+            FriendService.getFriendByInfo(userFocused)
+                .then((response) => {
+                    if(response.status === 200) return response.json();
+                    throw response.status;
+                })
+                .then((friendFocused) => {
+                    setFriend(friendFocused)
+                    console.log(friendFocused)
+                    setSearchOpen(false);
+                })
+                .catch((err) => console.error(err))
+                .finally(() => setLoadingSearch(false));
+        }, 1000)
     }
+
+    return (
+        <div
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}>
+            <div
+                className="draggable-container"
+                ref={containerRef}>
+                <div className="content">
+                    <Main friend={friend} />
+                </div>
+            </div>
+            <DialogHello searchOpen={searchOpen} updateAfterSearch={updateAfterSearch} loadingSearch={loadingSearch}/>
+            <Menu />
+        </div>
+    );
 }
 
 export default App;

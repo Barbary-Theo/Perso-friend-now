@@ -42,7 +42,7 @@
     width: 10vw;
     height: 10vh;
     padding: 10px;
-    position: relative;
+    position: absolute;
     background-color: white;
     border-radius: 15px;
     box-shadow: 6px 6px #323232;
